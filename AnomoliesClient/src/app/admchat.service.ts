@@ -33,25 +33,37 @@ reconstruct() {
   sendChatMessage(message: string) {
     this.hubConnection.invoke('SendMessage', message);
   }
-
+  private uri;
   private createConnection() {
     let cm = new ChatMessage();
-    const  uri = environment.baseUri + '/chatmessages';
-    cm.message = uri;
+    this.uri = environment.baseUri + '/chatmessages';
+    cm.message = this.uri;
     this.messageReceived.next(cm);
+    // this.hubConnection = new HubConnection(uri);
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(uri)
+      .withUrl(this.uri)
       .build();
   }
 
   private startConnection() {
-    setTimeout(() => {
+
+
+    this.hubConnection
+      .start()
+      .then(() => {console.log('Connection started!');
+        this.messageReceived.next({message: "connection established", sent: new Date()});
+      })
+      .catch(err => {console.error('Error while establishing connection :(');
+        this.messageReceived.next({message: "failed to connect " + this.uri, sent: new Date()});
+      });
+
+    /*setTimeout(() => {
       this.hubConnection.start().then(() => {
         console.log('Hub connection started');
         this.messageReceived.next({message: "connection established", sent: new Date()});
         this.connectionEstablished.next(true);
       });
-    }, WAIT_UNTIL_ASPNETCORE_IS_READY_DELAY_IN_MS);
+    }, WAIT_UNTIL_ASPNETCORE_IS_READY_DELAY_IN_MS);*/
   }
 
   private registerOnServerEvents(): void {

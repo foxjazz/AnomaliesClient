@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 import { Subject } from 'rxjs';
 
 
@@ -31,23 +31,17 @@ reconstruct() {
   this.startConnection();
 }
   sendChatMessage(message: string) {
-    this.hubConnection.invoke('SendMessage', message);
+    this.hubConnection.invoke('Send', message);
   }
-  private uri;
+  private uri = "";
   private createConnection() {
-    let cm = new ChatMessage();
-    this.uri = environment.baseUri + '/chatmessages';
-    cm.message = this.uri;
-    this.messageReceived.next(cm);
-    // this.hubConnection = new HubConnection(uri);
+    this.uri = environment.baseUri + '/chat';
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.uri)
+      .configureLogging(LogLevel.Information)
       .build();
   }
-
   private startConnection() {
-
-
     this.hubConnection
       .start()
       .then(() => {console.log('Connection started!');
@@ -56,23 +50,11 @@ reconstruct() {
       .catch(err => {console.error('Error while establishing connection :(');
         this.messageReceived.next({message: "failed to connect " + this.uri, sent: new Date()});
       });
-
-    /*setTimeout(() => {
-      this.hubConnection.start().then(() => {
-        console.log('Hub connection started');
-        this.messageReceived.next({message: "connection established", sent: new Date()});
-        this.connectionEstablished.next(true);
-      });
-    }, WAIT_UNTIL_ASPNETCORE_IS_READY_DELAY_IN_MS);*/
   }
 
   private registerOnServerEvents(): void {
-
-
     this.hubConnection.on('Send', (data: any) => {
       this.messageReceived.next(data);
     });
-
-
   }
 }

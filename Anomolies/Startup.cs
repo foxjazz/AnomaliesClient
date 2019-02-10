@@ -47,10 +47,14 @@ namespace Anomalies
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseCors(config =>
-                config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+            {
+                config.WithOrigins("http://localhost:4200", "http://localhost:5000");
+                config.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+            });
             app.UseHttpsRedirection();
-            app.UseSignalR(routes => { routes.MapHub<ChatMessages>("/chatmessages"); });
+            app.UseSignalR(routes => { routes.MapHub<ChatMessages>("/chat"); });
             app.UseSignalR(routes => { routes.MapHub<AdmChanges>("/admchanges"); });
             app.UseHttpsRedirection();
             app.UseMvc();

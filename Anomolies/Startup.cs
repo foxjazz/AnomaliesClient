@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Anomalies.Hubs;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -29,7 +31,7 @@ namespace Anomalies
         {
             services.AddCors();
             services.AddOptions();
-
+            //services.AddSpaStaticFiles();
             services.AddSingleton<Repo>();
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -50,13 +52,19 @@ namespace Anomalies
 
             app.UseCors(config =>
             {
-                config.WithOrigins("http://localhost:4200", "http://localhost:5000");
+                config.WithOrigins("http://localhost:4200");
                 config.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
             });
-            app.UseHttpsRedirection();
-            app.UseSignalR(routes => { routes.MapHub<ChatMessages>("/chat"); });
+            //app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider("g:\\eve\\WebADMs\\WebAdmClient\\src"),
+            //    RequestPath = "/home"
+            //});
+            
+            // app.UseHttpsRedirection();
+            //app.UseSignalR(routes => { routes.MapHub<ChatMessages>("/chat"); });
             app.UseSignalR(routes => { routes.MapHub<AdmChanges>("/admchanges"); });
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

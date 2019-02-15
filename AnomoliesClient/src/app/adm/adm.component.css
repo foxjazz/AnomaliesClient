@@ -1,0 +1,150 @@
+
+.arrow{
+  font-family: "Wingdings 3";
+  padding-right: 4px;
+}
+
+.selected {
+
+  color: red;
+}
+
+.groups{
+  height: auto;
+  overflow: visible;
+  font-size: 12;
+
+  padding: 0 0 1em 12px;
+}
+.groups li{
+  border-radius: 4px;
+  color: #b8af30;
+}
+.groups li span:hover {
+  color: #c934f9;
+
+}
+
+
+.items {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  width: 15em;
+  font-family: Tahoma;
+  font-size: 14;
+  overflow: visible;
+  height: auto;
+}
+.items li {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: transparent;
+  height: auto;
+  border-radius: 4px;
+}
+
+
+.items li span:hover {
+  color: #c934f9;
+
+}
+
+
+
+.items .text {
+  position: relative;
+
+}
+
+
+
+.itemtable {
+  background-color: #1f2f2f;
+  margin: 0 0 1em 0;
+  color: #a8af87;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 100;
+  font-size: 10;
+
+}
+
+.image {
+  background: black;
+
+}
+
+.itemtable tr {
+
+  color: #c0c9c7;
+  font-size: small;
+
+
+}
+.itemtable tr th{
+  min-width: 3em;
+}
+.itemtable tr td{
+  padding: .2em;
+  max-height: 2em;
+  font-size: small;
+}
+.input{
+  background-color: #1f2f2f;
+  color: #a8af87;
+}
+.itemtable tr.selected:hover {
+  background-color: #1f2f2f !important;
+  color: #c0c9c7;
+  cursor: pointer;
+}
+
+.itemtable tr:hover {
+  color: #c0c9c7;
+  background-color: #396763;
+  left: .1em;
+}4
+
+.horizontal li {
+  display: inline-block;
+  zoom: 1;
+  *display: inline; /* this fix is needed for IE7- */
+}
+.bomtext{
+  margin-left: 5px;
+  color: #a8af87;
+}
+.bomtext a{
+  margin-left: 8px;
+  color: #a8af87;
+}
+.alerttext {
+  color: #BD0913
+}
+.btn {
+  background: #242b30;
+  background-image: -webkit-linear-gradient(top, #242b30, #20292e);
+  background-image: -moz-linear-gradient(top, #242b30, #20292e);
+  background-image: -ms-linear-gradient(top, #242b30, #20292e);
+  background-image: -o-linear-gradient(top, #242b30, #20292e);
+  background-image: linear-gradient(to bottom, #242b30, #20292e);
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  font-family: Arial;
+  color: #a090f0;
+  font-size: 9px;
+  padding: 3px 3px 3px 3px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #000000;
+  background-image: -webkit-linear-gradient(top, #000000, #111111);
+  background-image: -moz-linear-gradient(top, #000000, #111111);
+  background-image: -ms-linear-gradient(top, #000000, #111111);
+  background-image: -o-linear-gradient(top, #000000, #111111);
+  background-image: linear-gradient(to bottom, #000000, #111111);
+  text-decoration: none;
+}

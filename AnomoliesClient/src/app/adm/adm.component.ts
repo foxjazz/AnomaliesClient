@@ -35,8 +35,18 @@ export class AdmComponent implements OnInit {
     this.adm = {name: "", id: 0, ts: new Date()};
 
     // Object.defineProperty(WebSocket, 'OPEN', { value: 1, });
-    this.hub.eveData.subscribe(a => {
-      this.eveHome.eveSystems = this.hub.eveSystems;
+    this.hub.addData.subscribe(adm => {
+      const data = this.eveSystems.filter(a => adm.id === adm.id);
+      data[0].adms.push({name: adm.name.toUpperCase(), id: 1, ts: new Date()});
+    })
+    ;
+    this.hub.removeData.subscribe(adm => {
+      const data = this.eveSystems.filter(s => adm.id === s.id);
+      for (let i = 0; i < data[0].adms.length; i++) {
+        if (data[0].adms[i].name === adm.name) {
+          data[0].adms.splice(i, 1);
+        }
+      }
     });
   }
   public save() {

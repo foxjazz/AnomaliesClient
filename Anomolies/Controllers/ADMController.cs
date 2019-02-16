@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Anomalies.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AdmController : Controller
     {
         private Repo _repo;

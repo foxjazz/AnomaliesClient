@@ -2,33 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Anomalies.Model;
+using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
 using Microsoft.AspNetCore.SignalR;
-
+using Newtonsoft.Json;
 
 
 namespace Anomalies.Services
 {
-    public class Repo
+    public sealed class Repo
     {
-        private string data { get; set; }
-        private dynamic eveHome { get; set; }
+        public Repo()
+        {
+            eveHome = new EveHome();
+            eveSystems = new List<EveSystem>();
+            eveHome.eveSystems = eveSystems;
+        }
+
+        private EveHome eveHome { get; set; }
+        private List<EveSystem> eveSystems;
         public string Read()
         {
-            return data;
+            return JsonConvert.SerializeObject(eveHome);
         }
 
-        public void Save(string d)
-        {
-            data = d;
-        }
         public void Save(string d, dynamic dy)
         {
-            data = d;
-            eveHome = dy;
+            dynamic data = dy;
             
+            for (int i = 0; i < data.eveSystems.Count; i++)
+            {
+                var ds = new EveSystem();
+                ds.name = data.eveSystems[i].name;
+                ds.id = data.eveSystems[i].id;
+                ds.adms = new List<Adm>();
+                var adml = new List<Adm>();
+                for (int ii = 0; ii < data.eveSystems[i].adms.Count; ii++)
+                {
+                    var adm = new Adm();
+                    adm.name = data.eveSystems[i].adms[ii].name;
+                    adm.id = data.eveSystems[i].adms[ii].id;
+                    adml.Add(adm);
+                }
+                eveSystems.Add(ds);
+            }
         }
 
-        public dynamic ReadDy()
+        public EveHome ReadDy()
         {
             return eveHome;
         }

@@ -9,6 +9,6 @@ namespace Anomalies.Model
     public class EveHome
     {
         public string key { get; set; }
-        public List<EveSystem> eveSystem { get; set; }
+        public List<EveSystem> eveSystems { get; set; }
     }
 }

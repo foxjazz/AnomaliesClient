@@ -14,7 +14,8 @@ export class AdmhubService {
   public eveSystems: EveSystem[];
   public eveHome: EveHome;
   public adm: Adm;
-  public eveData = new Subject<boolean>();
+  public addData = new Subject<Adm>();
+  public removeData = new Subject<Adm>();
   constructor() {
 
   }
@@ -48,7 +49,7 @@ export class AdmhubService {
       this.eveSystems = this.eveHome.eveSystems;
       const data = this.eveSystems.filter(a => a.id === system);
       data[0].adms.push({name: name.toUpperCase(), id: 1, ts: new Date()});
-      this.eveData.next(true);
+      this.addData.next({name: name, id: system, ts: new Date()});
     });
 
     this.hubConnection.on('RemoveAdm', (name: string, system: number) => {
@@ -59,7 +60,7 @@ export class AdmhubService {
           data[0].adms.splice(i, 1);
         }
       }
-      this.eveData.next(true);
+      this.removeData.next({name: name, id: system, ts: new Date()});
     });
 /*
     this.hubConnection.on('Send', (data: any) => {

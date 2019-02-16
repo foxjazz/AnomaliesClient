@@ -22,18 +22,26 @@ namespace Anomalies.Hubs
         }
         public Task AddAdm( string name, int system)
         {
-            
+
             var repo = _repo;
-            
+
             var eveHome = repo.ReadDy();
-            for (int i = 0; i < eveHome.eveSystem.Count; i++)
+            for (int i = 0; i < eveHome.eveSystems.Count; i++)
             {
-                if (eveHome.eveSystem[i].id == system)
+                if (eveHome.eveSystems[i].id == system)
                 {
-                    eveHome.eveSystem[i].adms.Add(new Adm { id = 1, name = name });
+                    var adm = new Adm();
+                    adm.id = 1;
+                    adm.name = name;
+                    adm.ts = DateTime.Now;
+                    if (eveHome.eveSystems[i].adms == null)
+                    {
+                        eveHome.eveSystems[i].adms = new List<Adm>();
+                    }
+                    eveHome.eveSystems[i].adms.Add(adm);
                 }
             }
-            repo.Save( eveHome.ToString(), eveHome);
+            
             return Clients.All.SendAsync("AddAdm", name, system);
         }
         public Task RemoveAdm(string name, int system)
@@ -41,20 +49,21 @@ namespace Anomalies.Hubs
             
             var repo = _repo;
             var eveHome = repo.ReadDy();
-            for (int i = 0; i < eveHome.eveSystem.Count; i++)
+            for (int i = 0; i < eveHome.eveSystems.Count; i++)
             {
-                if (eveHome.eveSystem[i].id == system)
+                if (eveHome.eveSystems[i].id == system)
                 {
-                    for (int ii = 0; ii < eveHome.eveSystem[i].adms.Count; ii++)
+                    for (int ii = 0; ii < eveHome.eveSystems[i].adms.Count; ii++)
                     {
-                        var adms = eveHome.eveSystem[i].adms as List<Adm>;
-                        var adm = adms.FirstOrDefault(n => n.name == name);
-                        adms.Remove(adm);
+                        if (eveHome.eveSystems[i].adms[ii].name == name)
+                        {
+                                eveHome.eveSystems[i].adms.RemoveAt(ii);
+                            
+                        }
                     }
-                    eveHome.eveSystem[i].adms.Add(new Adm { id = 1, name = name });
                 }
             }
-            repo.Save(eveHome.ToString(), eveHome);
+            
             return Clients.All.SendAsync("RemoveAdm", name, system);
 
         }

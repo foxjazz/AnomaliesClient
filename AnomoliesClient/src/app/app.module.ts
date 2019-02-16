@@ -13,7 +13,8 @@ import {HttpClientModule} from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
-    AdmComponent
+    AdmComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

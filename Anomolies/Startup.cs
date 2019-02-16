@@ -31,7 +31,7 @@ namespace Anomalies
         {
             services.AddCors();
             services.AddOptions();
-            //services.AddSpaStaticFiles();
+            services.AddSpaStaticFiles();
             services.AddSingleton<Repo>();
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -52,16 +52,20 @@ namespace Anomalies
 
             app.UseCors(config =>
             {
-                config.WithOrigins("http://localhost:4200");
+                config.WithOrigins("http://localhost:4200", "https://eveview.foxjazz.net");
                 config.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
             });
-            //app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider("g:\\eve\\WebADMs\\WebAdmClient\\src"),
-            //    RequestPath = "/home"
-            //});
-            
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            string staticFolder = Path.Combine(Directory.GetCurrentDirectory(), "dist") + @"\AnomoliesClient";
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes  =true,
+                FileProvider = new PhysicalFileProvider(staticFolder),
+                
+                RequestPath = "/client"
+            });
+
             // app.UseHttpsRedirection();
             //app.UseSignalR(routes => { routes.MapHub<ChatMessages>("/chat"); });
             app.UseSignalR(routes => { routes.MapHub<AdmChanges>("/admchanges"); });

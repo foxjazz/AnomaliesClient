@@ -16,16 +16,20 @@ export class AdmhubService {
   public adm: Adm;
   public addData = new Subject<Adm>();
   public removeData = new Subject<Adm>();
+  public clearData = new Subject<boolean>();
   constructor() {
 
   }
-  setupHub(){
+  setupHub() {
     this.createConnection();
     this.registerOnServerEvents();
     this.startConnection();
   }
   invoke(command: string, a, b) {
     this.hubConnection.invoke(command, a, b);
+  }
+  invClearData(command: string, b) {
+    this.hubConnection.invoke(command, b);
   }
   private createConnection() {
     this.uri = environment.baseUri + '/admchanges';
@@ -46,26 +50,14 @@ export class AdmhubService {
   private registerOnServerEvents(): void {
 
     this.hubConnection.on('AddAdm', (name: string, system: number) => {
-      this.eveSystems = this.eveHome.eveSystems;
-      const data = this.eveSystems.filter(a => a.id === system);
-      data[0].adms.push({name: name.toUpperCase(), id: 1, ts: new Date()});
       this.addData.next({name: name, id: system, ts: new Date()});
     });
 
     this.hubConnection.on('RemoveAdm', (name: string, system: number) => {
-      this.eveSystems = this.eveHome.eveSystems;
-      const data = this.eveSystems.filter(a => a.id === system);
-      for (let i = 0; i < data[0].adms.length; i++){
-        if (data[0].adms[i].name === name) {
-          data[0].adms.splice(i, 1);
-        }
-      }
       this.removeData.next({name: name, id: system, ts: new Date()});
     });
-/*
-    this.hubConnection.on('Send', (data: any) => {
-      this.messageReceived.next(data);
+    this.hubConnection.on('ClearData', (b: boolean) => {
+      this.clearData.next(b);
     });
-*/
   }
 }

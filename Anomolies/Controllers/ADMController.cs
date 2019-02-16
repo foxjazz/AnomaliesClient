@@ -27,8 +27,8 @@ namespace Anomalies.Controllers
         {
             try
             {
-                if (eveHome.key != "evePower")
-                    return;
+                //if (eveHome.key != "evePower")
+                //    return;
                 string val = eveHome.ToString();
                 if (val.Length > 100000)
                     return;

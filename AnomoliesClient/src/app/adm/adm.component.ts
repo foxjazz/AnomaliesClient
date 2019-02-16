@@ -29,17 +29,16 @@ export class AdmComponent implements OnInit {
   }
   ngOnInit() {
 
-    this.loaddata();
+
     this.hub.setupHub();
     this.eveHome.eveSystems = this.eveSystems;
     this.adm = {name: "", id: 0, ts: new Date()};
 
     // Object.defineProperty(WebSocket, 'OPEN', { value: 1, });
-    this.hub.addData.subscribe(adm => {
-      const data = this.eveSystems.filter(a => adm.id === adm.id);
-      data[0].adms.push({name: adm.name.toUpperCase(), id: 1, ts: new Date()});
-    })
-    ;
+    this.hub.addData.subscribe(svsAdm => {
+      const data = this.eveSystems.filter(sys => svsAdm.id === sys.id);
+      data[0].adms.push({name: svsAdm.name, id: 1, ts: new Date()});
+    });
     this.hub.removeData.subscribe(adm => {
       const data = this.eveSystems.filter(s => adm.id === s.id);
       for (let i = 0; i < data[0].adms.length; i++) {
@@ -48,7 +47,13 @@ export class AdmComponent implements OnInit {
         }
       }
     });
+    this.hub.clearData.subscribe(b => {
+        this.populateEsys();
+        this.save();
+    });
+    this.loaddata();
   }
+
   public save() {
     this.repo.save(this.eveHome).subscribe((ldata: any) => {
       console.log(ldata);
@@ -58,12 +63,12 @@ export class AdmComponent implements OnInit {
 
       });
   }
+  public clearData(){
+    this.hub.invClearData("ClearData", true);
+  }
   public loaddata() {
     this.repo.get().subscribe(eve => {
       this.eveHome = eve;
-      if (this.eveHome.key == null) {
-        this.populateEsys();
-      }
       this.eveSystems = this.eveHome.eveSystems;
     }), ( error => {
       console.log(error);
@@ -78,41 +83,6 @@ export class AdmComponent implements OnInit {
     this.hub.invoke("AddAdm", e, iid);
   }
 
-  /* public removeOld (a: string, iid: number){
-     this.repo.get().subscribe(eve => {
-       this.eveHome = eve;
-       if (this.eveHome.key == null) {
-         this.populateEsys();
-       }
-       this.eveSystems = this.eveHome.eveSystems;
-       const data = this.eveSystems.filter(a => a.id === iid);
-       for (let i = 0; i < data[0].adms.length; i++){
-         if (data[0].adms[i].name === a) {
-           data[0].adms.splice(i, 1);
-         }
-       }
-       this.save();
-     }), ( error => {
-       console.log(error);
-       this.populateEsys();
-     });
-
-   }
-
-
-   public addTagOld(e: string, iid: number) {
-     this.repo.get().subscribe(eve => {
-       this.eveHome = eve;
-       this.eveSystems = this.eveHome.eveSystems;
-       const data = this.eveSystems.filter(a => a.id === iid);
-       data[0].adms.push({name: e.toUpperCase(), id: 1, ts: new Date()});
-       this.save();
-     }), ( error => {
-       console.log(error);
-       this.populateEsys();
-     });
-
-   }*/
   private populateEsys(): any {
     this.eveSystems = [];
     const ee = this.eveSystems;
@@ -134,9 +104,10 @@ export class AdmComponent implements OnInit {
   }
 
   public clearSystems(){
-    this.populateEsys();
-    this.eveHome.key = "evePower";
-    this.save();
+    this.clearData();
+    // this.populateEsys();
+    // this.eveHome.key = "evePower";
+    // this.save();
   }
 
 

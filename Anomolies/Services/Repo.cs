@@ -26,10 +26,46 @@ namespace Anomalies.Services
             return JsonConvert.SerializeObject(eveHome);
         }
 
+        public void Remove(string name, int system)
+        {
+            for (int i = 0; i < eveHome.eveSystems.Count; i++)
+            {
+                if (eveHome.eveSystems[i].id == system)
+                {
+                    for (int ii = 0; ii < eveHome.eveSystems[i].adms.Count; ii++)
+                    {
+                        if (eveHome.eveSystems[i].adms[ii].name == name)
+                        {
+                            eveHome.eveSystems[i].adms.RemoveAt(ii);
+
+                        }
+                    }
+                }
+            }
+        }
+        public void Add(string name, int system)
+        {
+            for (int i = 0; i < eveHome.eveSystems.Count; i++)
+            {
+                if (eveHome.eveSystems[i].id == system)
+                {
+                    var adm = new Adm();
+                    adm.id = 1;
+                    adm.name = name;
+                    adm.ts = DateTime.Now;
+                    if (eveHome.eveSystems[i].adms == null)
+                    {
+                        eveHome.eveSystems[i].adms = new List<Adm>();
+                    }
+                    eveHome.eveSystems[i].adms.Add(adm);
+                }
+            }
+        }
         public void Save(string d, dynamic dy)
         {
             dynamic data = dy;
-            
+            eveHome.eveSystems = new List<EveSystem>();
+            eveSystems = eveHome.eveSystems;
             for (int i = 0; i < data.eveSystems.Count; i++)
             {
                 var ds = new EveSystem();

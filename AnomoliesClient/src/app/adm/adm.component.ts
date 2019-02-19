@@ -19,6 +19,7 @@ export class AdmComponent implements OnInit {
   public eveSystems: EveSystem[];
   public eveHome: EveHome;
   public adm: Adm;
+  public hubStatus = "";
   messageReceived = new Subject<ChatMessage>();
   private hubConnection: HubConnection;
   constructor(private repo: RepoService, private hub: AdmhubService) {
@@ -51,8 +52,17 @@ export class AdmComponent implements OnInit {
         this.populateEsys();
         this.save();
     });
+    this.hub.onClose.subscribe(b => {
+      if(b) {
+        this.hubStatus = "closed";
+      }
+    });
+    this.hub.onConnected.subscribe(b => {
+      this.hubStatus = "connected";
+    });
     this.loaddata();
   }
+
 
   public save() {
     this.repo.save(this.eveHome).subscribe((ldata: any) => {

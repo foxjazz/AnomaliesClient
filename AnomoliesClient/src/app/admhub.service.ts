@@ -17,6 +17,8 @@ export class AdmhubService {
   public addData = new Subject<Adm>();
   public removeData = new Subject<Adm>();
   public clearData = new Subject<boolean>();
+  public onClose = new Subject<boolean>();
+  public onConnected = new Subject<boolean>();
   constructor() {
 
   }
@@ -41,7 +43,9 @@ export class AdmhubService {
   private startConnection() {
     this.hubConnection
       .start()
-      .then(() => {console.log('Connection started!');
+      .then(() => {
+        console.log('Connection started!');
+        this.onConnected.next(true);
       })
       .catch(err => {console.error('Error while establishing connection :(');
       });
@@ -58,6 +62,9 @@ export class AdmhubService {
     });
     this.hubConnection.on('ClearData', (b: boolean) => {
       this.clearData.next(b);
+    });
+    this.hubConnection.onclose(() => {
+      this.onClose.next(true);
     });
   }
 }

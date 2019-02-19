@@ -35,6 +35,10 @@ namespace Anomalies
             services.AddSingleton<Repo>();
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "Anomalies";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +50,7 @@ namespace Anomalies
             }
             else
             {
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -57,19 +62,21 @@ namespace Anomalies
             });
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             string staticFolder = Path.Combine(Directory.GetCurrentDirectory(), "dist") + @"\AnomoliesClient";
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ServeUnknownFileTypes  =true,
-                FileProvider = new PhysicalFileProvider(staticFolder),
-                
-                RequestPath = "/client"
-            });
+         
 
             // app.UseHttpsRedirection();
             //app.UseSignalR(routes => { routes.MapHub<ChatMessages>("/chat"); });
             app.UseSignalR(routes => { routes.MapHub<AdmChanges>("/admchanges"); });
             app.UseMvc();
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "Anomalies";
+            });
         }
     }
 }

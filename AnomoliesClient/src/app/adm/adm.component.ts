@@ -38,7 +38,10 @@ export class AdmComponent implements OnInit {
     // Object.defineProperty(WebSocket, 'OPEN', { value: 1, });
     this.hub.addData.subscribe(svsAdm => {
       const data = this.eveSystems.filter(sys => svsAdm.id === sys.id);
-      data[0].adms.push({name: svsAdm.name, id: 1, ts: new Date()});
+      const line = data[0].adms.find(a => a.name === svsAdm.name);
+      if (line == null) {
+        data[0].adms.push({name: svsAdm.name, id: 1, ts: new Date()});
+      }
     });
     this.hub.removeData.subscribe(adm => {
       const data = this.eveSystems.filter(s => adm.id === s.id);

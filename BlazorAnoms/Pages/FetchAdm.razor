@@ -1,0 +1,64 @@
+﻿@page "/fetchadm"
+<h3>FetchAdm</h3>
+@using Anomalies.Model
+@using BlazorAnoms.Data
+@inject AnomService Anom
+
+
+
+@if (eveHome == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Table</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var adms in eveHome.eveSystems)
+        {
+            <tr>
+                <td>@adms.name</td>
+                <td>
+                    <table class="table">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>Time stamp</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var adm in adms.adms)
+                    {
+                        <tr>
+                            <td>
+                                @adm.name
+                            </td>
+                            <td>
+                                @adm.ts
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    EveHome eveHome;
+
+    protected override async Task OnInitializedAsync()
+    {
+        eveHome = await Anom.GetAnoms();
+
+    }
+}

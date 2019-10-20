@@ -23,6 +23,8 @@ namespace Anomalies.Services
         private List<EveSystem> eveSystems;
         public string Read()
         {
+            if (eveHome.key == null)
+                eveHome.key = "key";
             return JsonConvert.SerializeObject(eveHome);
         }
 

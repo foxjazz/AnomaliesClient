@@ -59,6 +59,13 @@ else
     protected override async Task OnInitializedAsync()
     {
         eveHome = await Anom.GetAnoms();
+        Anom.OnChange += () =>
+        {
+            eveHome = Anom.getChanges();
+            StateHasChanged();
+        };
 
     }
+
+
 }
